@@ -60,6 +60,7 @@ namespace LucSequence
                 {
                     stopWatcher.Restart();
                     Console.WriteLine(luc[result]);
+                    Console.WriteLine(luc.GetU(result));
                     stopWatcher.Stop();
                     Console.ForegroundColor = ConsoleColor.DarkGreen;
                     Console.WriteLine(stopWatcher.ElapsedTicks);
