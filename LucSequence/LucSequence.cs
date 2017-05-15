@@ -30,6 +30,7 @@ namespace LucSequence
             P = p;
             Q = q;
         }
+
         private List<int> CalculateCountOfOperation(BigInteger index)
         {
             List<int> array = new List<int>() { 2 };
@@ -49,115 +50,6 @@ namespace LucSequence
                     array.Add(0);
                 }
             }
-            return array;
-        }
-        private List<int> CalculateCountOfOperation2(BigInteger index)
-        {
-            List<int> array = new List<int>() { 2 };
-
-            while (index > 1)
-            {
-
-                if (index % 2 == 1)
-                {
-                    index--;
-                    index /= 2;
-                    array.Add(0);
-                }
-                else
-                {
-                    index /= 2;
-                    array.Add(1);
-                }
-            }
-            return array;
-        }
-
-
-
-        private List<int> CalculateCountOfOperationForU(BigInteger index)
-        {
-            List<int> array = new List<int>() { 2 };
-            if (index == 1)
-            {
-                array.Add(1);
-            }
-            if (index == 2)
-            {
-                array.Add(0);
-            }
-            if (index == 3)
-            {
-                array.Add(1);
-                array.Add(0);
-            }
-            if (index == 4)
-            {
-                array.Add(0);
-                array.Add(0);
-            }
-            if (index == 5)//todo
-            {
-                array.Add(1);
-                array.Add(1);
-                array.Add(1);
-            }
-            if (index == 6)
-            {
-                array.Add(0);
-                array.Add(1);
-                array.Add(0);
-            }
-            if (index == 7)
-            {
-                array.Add(1);
-                array.Add(0);
-                array.Add(0);
-            }
-            if (index == 8)
-            {
-                array.Add(0);
-                array.Add(0);
-                array.Add(1);
-            }
-            if (index == 9)//todo
-            {
-                array.Add(1);
-                array.Add(0);
-                array.Add(1);
-                array.Add(0);
-            }
-            if (index == 10)//todo
-            {
-                array.Add(0);
-                array.Add(0);
-                array.Add(1);
-                array.Add(0);
-            }
-            //bool flag = (index+1) % 2 == 1;
-
-
-            //if (flag)
-            //{
-            //    array.Add(1);
-            //}
-
-            //if (index == 3)
-            //{
-            //    array.Add(0);
-            //    return array;
-            //}
-
-
-            //while (index > 1)
-            //{
-            //    index /= 2;
-            //    array.Add(0);
-            //}
-            ////if (!flag)
-            ////{
-            ////    array.Add(1);
-            ////}
             return array;
         }
 
@@ -215,25 +107,17 @@ namespace LucSequence
                 }
                 else if (currentIndex == 2)
                 {
-                    //BigInteger Vtn1 = current;
-                    //current = current * current - prev * prev;
-                    //prev = Vtn1;
                     break;
                 }
                 else
                 {
-                    //if (current == 1 && prev == 0)
-                    //{
-
-                    //    BigInteger V2tn = (9 * (current * current) - 6 * current * prev) / P;
-                    //    BigInteger Vtn1z = current * current - prev * prev;
-                    //    prev = Vtn1z;
-                    //    current = V2tn;
-                    //    continue;
-                    //}
-                    BigInteger Vtn1 = 0;
+                    BigInteger Vtn1 = (9 * (current * current) - 6 * current * prev) / P;
                     prev = current * current - prev * prev;
+
+                    var tmp = Vtn1;
+                    Vtn1 = P * Vtn1 - prev;
                     current = Vtn1;
+                    prev = tmp;
                 }
             }
 
