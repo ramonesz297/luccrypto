@@ -50,6 +50,54 @@ namespace Tests
         }
 
         [TestMethod]
+        public void DsMessage()
+        {
+            //AAtkin a = new AAtkin(1350);
+            //LucPrime lucPrime = new LucPrime(a.RandomPrime, a.RandomPrime);
+            var p = 13;
+            var lambda = 3;
+            //LegendreNumbers legendreNumbers = new LucSequence.LegendreNumbers(primeNumbers: lucPrime, message: message);
+            //LucPublicKey publicKey = new LucPublicKey(lucPrime);
+            //LucPrivateKey privateKey = new LucPrivateKey(publicKey, legendreNumbers);
+            BigInteger x = 5;
+            var lucasSequence = new LucasSequence(lambda, 1);
+            var y = lucasSequence.CalculateV(x) % p;
+            var yS = lucasSequence.CalculateU(x) % p;
+
+            //ds
+
+            BigInteger message = 11111;
+            var k = 7;
+
+            var r = lucasSequence.CalculateV(k) % p;
+            var rS = lucasSequence.CalculateU(k) % p;
+
+            var s = (BigInteger.Pow(k, -1.Eyler()) * (message - x * r)) % (p + 1);
+
+
+            // check ds
+            var D = (lambda * lambda - 4) % p;
+
+            var yLucasSequense = new LucasSequence(y, 1);
+            var rLucasSequense = new LucasSequence(y, 1);
+
+            var lhs = lucasSequence.CalculateV(message) % p;
+            var rhs = ((yLucasSequense.CalculateV(r) * rLucasSequense.CalculateV(s) + (D * yS * yLucasSequense.CalculateU(r) * rS * rLucasSequense.CalculateU(s))) / 2) % p;
+
+            Assert.AreEqual<BigInteger>(lhs, rhs);
+            //var seqPublic = new LucSequence.LucasSequence(message, 1);
+
+            //var ciphertext = seqPublic[publicKey.e] % publicKey.N;
+
+            //var seqPrivate = new LucSequence.LucasSequence(ciphertext, 1);
+
+            //var result = seqPrivate[privateKey.d] % privateKey.N;
+
+            //Assert.AreEqual<BigInteger>(result, message);
+
+        }
+
+        [TestMethod]
         public void PrivateKey()
         {
             LucPrime lucPrime = new LucPrime(p: 1949, q: 2089);
@@ -104,8 +152,8 @@ namespace Tests
         }
 
 
-  
-      
+
+
         [TestMethod]
         public void TestIsPerfectSquare()
         {
