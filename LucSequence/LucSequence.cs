@@ -55,6 +55,10 @@ namespace LucSequence
 
         public BigInteger CalculateV(BigInteger n)
         {
+            if (n==0)
+            {
+                return 2;
+            }
             var k = CalculateCountOfOperation(n);
             BigInteger prev = 2, current = P;
             var enumerator = k.GetEnumerator();
