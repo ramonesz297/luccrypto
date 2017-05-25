@@ -3,6 +3,9 @@ using System.Numerics;
 using LucSequence;
 using System.Collections;
 using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using MathNet.Numerics.LinearAlgebra.Complex;
@@ -55,26 +58,32 @@ namespace Tests
         [TestMethod]
         public void DsMessage()
         {
-            var p = 3719;
-            var lambda = 16;
 
-            BigInteger x = 46;
+            AAtkin atkin = new AAtkin(10000);
+            var rnd = new Random();
+            var p = atkin.RandomPrime;
+
+            var lambda = GetLambda(p);
+            Trace.WriteLine($"lambda: {lambda}");
+            BigInteger x = rnd.Next(1, p - 1);
+
             var lucasSequence = new LucasSequence(lambda, 1);
-            var y = lucasSequence.CalculateV(x)%p;
-            var yS = lucasSequence.CalculateU(x)%p;
+            var y = lucasSequence.CalculateV(x) % p;
+            var yS = lucasSequence.CalculateU(x) % p;
 
             //ds
 
             BigInteger message = 3600;
-            var k = 23;
 
-            var r = lucasSequence.CalculateV(k)%p;
-            var rS = lucasSequence.CalculateU(k)%p;
+            var k = rnd.Next(1, p - 1);
+
+            var r = lucasSequence.CalculateV(k) % p;
+            var rS = lucasSequence.CalculateU(k) % p;
             var kInverted2 = ModInverse(k, (p + 1));
 
             BigInteger a = kInverted2 * message;
             BigInteger b = kInverted2 * x * r % (p + 1);
-            
+
             var s = (a - b) % (p + 1);
 
             //var xt = (ModInverse(r, (p + 1)) * (message - k * s)) % (p + 1);
@@ -106,40 +115,29 @@ namespace Tests
             //var Dc = ((2*lhs - yLucasSequense.CalculateV(r) * rLucasSequense.CalculateV(s))/ yS * yLucasSequense.CalculateU(r) * rS * rLucasSequense.CalculateU(s)) % p;
 
 
-            Assert.AreEqual<BigInteger>(lhs, rhs,"lhs != rhs");
+            Assert.AreEqual<BigInteger>(lhs, rhs, "lhs != rhs");
 
         }
 
-        [TestMethod]
-        public void Lemma2Test()
+        public int GetLambda(int p)
         {
-            int a = 3, m = 4, n = 5, k = 9;
-
-            var lucasSequence = new LucasSequence(a, 1);
-
-            var l = BigInteger.Pow(lucasSequence.CalculateV(k), 2) + lucasSequence.CalculateV(2 * m) +
-                    lucasSequence.CalculateV(2 * n);
-
-            var r = lucasSequence.CalculateV(m) * lucasSequence.CalculateV(n) * lucasSequence.CalculateV(k);
-
-            Assert.AreEqual(l, r);
+            var indexes = GetDivisors(p + 1);
+            for (int i = 3; i < 100; i++)
+            {
+                var lucas = new LucasSequence(i, 1);
+                if (indexes.All(e => (lucas.CalculateV((p+1)/e) % p) != 2))
+                {
+                    return i;
+                }
+            }
+            throw new Exception();
         }
 
-        [TestMethod]
-        public void T14()
+        static IEnumerable<int> GetDivisors(int n)
         {
-            var lucasSequence = new LucasSequence(3,1);
-            int n = 56, k = 73;
-            var vnLucasSequence = new LucasSequence(lucasSequence.CalculateV(n), 1);
-            var vkLucasSequence = new LucasSequence(lucasSequence.CalculateV(k), 1);
-            Assert.AreEqual(lucasSequence.CalculateV(56*73),vkLucasSequence.CalculateV(n));
-            Assert.AreEqual(lucasSequence.CalculateV(56*73),vnLucasSequence.CalculateV(k));
-
-            var unLucasSequence = new LucasSequence(lucasSequence.CalculateU(n), 1);
-            var ukLucasSequence = new LucasSequence(lucasSequence.CalculateU(k), 1);
-
-            Assert.AreEqual(lucasSequence.CalculateU(56 * 73), ukLucasSequence.CalculateU(n));
-            Assert.AreEqual(lucasSequence.CalculateU(56 * 73), unLucasSequence.CalculateU(k));
+            return from a in Enumerable.Range(2, n / 2)
+                   where n % a == 0
+                   select a;
         }
 
         [TestMethod]
