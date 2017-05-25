@@ -56,32 +56,36 @@ namespace Tests
         public void DsMessage()
         {
             var p = 3719;
-            var lambda = 47;
+            var lambda = 16;
 
-            BigInteger x = 37;
+            BigInteger x = 46;
             var lucasSequence = new LucasSequence(lambda, 1);
             var y = lucasSequence.CalculateV(x)%p;
             var yS = lucasSequence.CalculateU(x)%p;
 
             //ds
 
-            BigInteger message = 3718;
+            BigInteger message = 3600;
             var k = 23;
 
             var r = lucasSequence.CalculateV(k)%p;
             var rS = lucasSequence.CalculateU(k)%p;
             var kInverted2 = ModInverse(k, (p + 1));
 
-            var s = (kInverted2 * (message - (x * r)%(p+1))) % (p + 1);
-            var xt = (ModInverse(r, (p + 1)) * (message - k * s)) % (p + 1);
+            BigInteger a = kInverted2 * message;
+            BigInteger b = kInverted2 * x * r % (p + 1);
+            
+            var s = (a - b) % (p + 1);
 
-            var m2 = (x * r + k * s) % (p + 1);
+            //var xt = (ModInverse(r, (p + 1)) * (message - k * s)) % (p + 1);
 
-            var m3 = (x % (p + 1) * (r % (p + 1)) % (p + 1) + (k % (p + 1)) * (s % (p + 1) ) % (p + 1) )% (p+1);
+            //var m2 = (x * r + k * s) % (p + 1);
+
+            //var m3 = (x % (p + 1) * (r % (p + 1)) % (p + 1) + (k % (p + 1)) * (s % (p + 1) ) % (p + 1) )% (p+1);
 
             //Assert.AreEqual<BigInteger>(x, xt);
-            Assert.AreEqual<BigInteger>(message, m2);
-            Assert.AreEqual<BigInteger>(message, m3);
+            //Assert.AreEqual<BigInteger>(message, m2);
+            //Assert.AreEqual<BigInteger>(message, m3);
             // check ds
             var D =
                 (lambda * lambda - 4) % (p);
@@ -90,18 +94,19 @@ namespace Tests
             var rLucasSequense = new LucasSequence(r, 1);
 
 
-            var lhs = lucasSequence.CalculateV(message) % (p);
+            var lhs = (lucasSequence.CalculateV(message)) % (p);
             var rhs = ((yLucasSequense.CalculateV(r) * rLucasSequense.CalculateV(s) +
                         (D * yS * yLucasSequense.CalculateU(r) * rS * rLucasSequense.CalculateU(s))) / 2) % (p);
 
-            var vxr = ((lucasSequence.CalculateV(x*r)*lucasSequence.CalculateV(k*s)+D* lucasSequence.CalculateU(x*r)* lucasSequence.CalculateU(k*s))/2)%(p);
-
+            //var vxr = ((lucasSequence.CalculateV(x * r) * lucasSequence.CalculateV(k * s) +
+            //            D * lucasSequence.CalculateU(x * r) * lucasSequence.CalculateU(k * s)) / 2) % (p);
+            //Assert.AreEqual(rhs, vxr,"rhs != vxr");
             //var rv = ModInverse((2 * lucasSequence.CalculateV(message) - yLucasSequense.CalculateV(r) * rLucasSequense.CalculateV(s)) * (D * yS * yLucasSequense.CalculateU(r) * rLucasSequense.CalculateU(s)), p) % p;
             //test
             //var Dc = ((2*lhs - yLucasSequense.CalculateV(r) * rLucasSequense.CalculateV(s))/ yS * yLucasSequense.CalculateU(r) * rS * rLucasSequense.CalculateU(s)) % p;
 
 
-            //Assert.AreEqual<BigInteger>(lhs, rhs);
+            Assert.AreEqual<BigInteger>(lhs, rhs,"lhs != rhs");
 
         }
 

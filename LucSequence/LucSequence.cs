@@ -55,7 +55,7 @@ namespace LucSequence
 
         public BigInteger CalculateV(BigInteger n)
         {
-            if (n==0)
+            if (n == 0)
             {
                 return 2;
             }
@@ -103,7 +103,9 @@ namespace LucSequence
                 var currentIndex = k[i];
                 if (currentIndex == 0)
                 {
-                    BigInteger V2tn = (9 * (current * current) - 6 * current * prev) / P;
+                    var next = P * current - prev;
+                    BigInteger V2tn = current * (2 * next - P*(current));
+                    //BigInteger V2tn = (9 * (current * current) - 6 * current * prev) / P;
                     BigInteger Vtn1 = current * current - prev * prev;
                     prev = Vtn1;
                     current = V2tn;
@@ -115,7 +117,9 @@ namespace LucSequence
                 }
                 else
                 {
-                    BigInteger Vtn1 = (9 * (current * current) - 6 * current * prev) / P;
+                    //BigInteger Vtn1 = (9 * (current * current) - 6 * current * prev) / P;
+                    var next = P * current - prev;
+                    BigInteger Vtn1 = current * (2 * next - P*(current));
                     prev = current * current - prev * prev;
 
                     var tmp = Vtn1;

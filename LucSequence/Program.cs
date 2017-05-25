@@ -49,7 +49,7 @@ namespace LucSequence
 
         static void Main(string[] args)
         {
-            var luc = new LucasSequence(3, 1);
+            var luc = new LucasSequence(5, 1);
 
             var stopWatcher = new System.Diagnostics.Stopwatch();
             while (true)
