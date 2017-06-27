@@ -1,15 +1,13 @@
+﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Numerics;
-using LucSequence;
-using System.Collections;
-using System;
-using System.Text;
-namespace Tests
+using LucasSequences;
+
+namespace Luc.Test
 {
     [TestClass]
-    public class ExtensionsTest
+    public class LucasTest
     {
-
 
         [TestMethod]
         public void LucasSeq()
@@ -18,13 +16,24 @@ namespace Tests
             BigInteger index = 1103;
             BigInteger module = 4071461;
             BigInteger message = 11111;
-            var seqPublic = new LucSequence.LucasSequence(message, 1);
+            var seqPublic = new LucasSequences.LucasSequence(message, 1);
 
             var result = seqPublic[index] % module;
             Assert.AreEqual<BigInteger>(result, 3975392);
 
         }
 
+        [TestMethod]
+        public void LucasSeqMod()
+        {
+            BigInteger index = 1103;
+            BigInteger module = 4071461;
+            BigInteger message = 11111;
+            var seqPublic = new LucasSequences.LucasSequence(message, 1);
+
+            var result = seqPublic[index, module];
+            Assert.AreEqual<BigInteger>(result, 3975392);
+        }
 
         [TestMethod]
         public void EncryptMessage()
@@ -33,20 +42,41 @@ namespace Tests
             LucPrime lucPrime = new LucPrime(a.RandomPrime, a.RandomPrime);
             BigInteger message = 11111;
 
-            LegendreNumbers legendreNumbers = new LucSequence.LegendreNumbers(primeNumbers: lucPrime, message: message);
+            LegendreNumbers legendreNumbers = new LegendreNumbers(primeNumbers: lucPrime, message: message);
             LucPublicKey publicKey = new LucPublicKey(lucPrime);
             LucPrivateKey privateKey = new LucPrivateKey(publicKey, legendreNumbers);
 
-            var seqPublic = new LucSequence.LucasSequence(message, 1);
+            var seqPublic = new LucasSequences.LucasSequence(message, 1);
 
             var ciphertext = seqPublic[publicKey.e] % publicKey.N;
 
-            var seqPrivate = new LucSequence.LucasSequence(ciphertext, 1);
+            var seqPrivate = new LucasSequences.LucasSequence(ciphertext, 1);
 
             var result = seqPrivate[privateKey.d] % privateKey.N;
 
             Assert.AreEqual<BigInteger>(result, message);
 
+        }
+        [TestMethod]
+        public void EncryptMessageMod()
+        {
+            AAtkin a = new AAtkin(1350);
+            LucPrime lucPrime = new LucPrime(a.RandomPrime, a.RandomPrime);
+            BigInteger message = 11111;
+
+            LegendreNumbers legendreNumbers = new LucasSequences.LegendreNumbers(primeNumbers: lucPrime, message: message);
+            LucPublicKey publicKey = new LucPublicKey(lucPrime);
+            LucPrivateKey privateKey = new LucPrivateKey(publicKey, legendreNumbers);
+
+            var seqPublic = new LucasSequences.LucasSequence(message, 1);
+
+            var ciphertext = seqPublic[publicKey.e, publicKey.N];
+
+            var seqPrivate = new LucasSequences.LucasSequence(ciphertext, 1);
+
+            var result = seqPrivate[privateKey.d, privateKey.N];
+
+            Assert.AreEqual<BigInteger>(result, message);
         }
 
         [TestMethod]
@@ -56,7 +86,7 @@ namespace Tests
             BigInteger message = 11111;
 
             LucPublicKey publicKey = new LucPublicKey(1103, 4071461);
-            LegendreNumbers legend = new LucSequence.LegendreNumbers(lucPrime, message);
+            LegendreNumbers legend = new LucasSequences.LegendreNumbers(lucPrime, message);
             LucPrivateKey key = new LucPrivateKey(publicKey, legend);
 
             Assert.AreEqual<BigInteger>(key.d, 24017);
@@ -79,7 +109,7 @@ namespace Tests
             LucPrime lucPrime = new LucPrime(p: 1949, q: 2089);
             BigInteger message = 11111;
 
-            LegendreNumbers legend = new LucSequence.LegendreNumbers(lucPrime, message);
+            LegendreNumbers legend = new LucasSequences.LegendreNumbers(lucPrime, message);
 
             Assert.AreEqual<Int32>(lucPrime.N, 4071461);
             Assert.AreEqual<BigInteger>(legend.D, 123454317);
@@ -88,24 +118,6 @@ namespace Tests
             Assert.AreEqual(legend.Sn, 407550);
         }
 
-        [TestMethod]
-        public void TestCrypt()
-        {
-            AAtkin primes = new AAtkin(2000);
-            LucPrime lucPrime = new LucPrime(primes.RandomPrime, primes.RandomPrime);
-            BigInteger messsage = 11111;
-            LucKeyGenerator keyGen = new LucKeyGenerator(lucPrime, messsage);
-            var lucSeq = new LucasSequence(messsage, 1);
-            var cryptText = lucSeq[keyGen.PublicKey.e] % keyGen.PublicKey.N;
-
-            var lucSeq2 = new LucasSequence(cryptText, 1);
-            var decryptText = lucSeq[keyGen.PrivateKey.d] % keyGen.PrivateKey.N;
-            Assert.AreEqual<BigInteger>(decryptText, 11111);
-        }
-
-
-  
-      
         [TestMethod]
         public void TestIsPerfectSquare()
         {

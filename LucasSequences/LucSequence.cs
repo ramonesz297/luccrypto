@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Numerics;
 
-namespace LucSequence
+namespace LucasSequences
 {
     public class LucasSequence
     {
@@ -45,15 +45,15 @@ namespace LucSequence
 
             while (index > 1)
             {
-                if (index % 2 == 1)
+                if ((index & 1) == 1)
                 {
                     index--;
-                    index /= 2;
+                    index >>= 1;
                     array.Add(1);
                 }
                 else
                 {
-                    index /= 2;
+                    index >>= 1;
                     array.Add(0);
                 }
             }
@@ -75,7 +75,6 @@ namespace LucSequence
                     BigInteger Vtn1 = ((current * prev) - P); // caculate V_(2n-1)
                     prev = Vtn1 % mod;
                     current = V2tn % mod;
-
                 }
                 else if (currentIndex == 1)
                 {

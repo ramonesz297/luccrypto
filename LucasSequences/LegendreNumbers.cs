@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Numerics;
 
-namespace LucSequence
+namespace LucasSequences
 {
     public struct LegendreNumbers
     {

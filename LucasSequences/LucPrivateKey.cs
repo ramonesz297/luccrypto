@@ -1,7 +1,7 @@
 ﻿using System.Numerics;
-using LucSequence;
+using LucasSequences;
 
-namespace LucSequence
+namespace LucasSequences
 {
     public struct LucPrivateKey : ILucKey
     {

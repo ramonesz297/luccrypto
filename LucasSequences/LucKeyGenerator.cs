@@ -1,16 +1,13 @@
 using System;
 using System.Numerics;
-using LucSequence;
 
-namespace LucSequence
+namespace LucasSequences
 {
     public class LucKeyGenerator
     {
-
         private readonly LucPrime PrimeNumbers;
 
         private readonly BigInteger P;
-
 
         private LucPublicKey _publicKey;
 
@@ -25,7 +22,6 @@ namespace LucSequence
                 _publicKey = value;
             }
         }
-
 
         private LucPrivateKey _privateKey;
         public LucPrivateKey PrivateKey
@@ -102,8 +98,6 @@ namespace LucSequence
             PrivateKey = new LucPrivateKey(getSmalld(PublicKey), PrimeNumbers.N);
         }
 
-
-        
 
         /// <summary>
         /// 
